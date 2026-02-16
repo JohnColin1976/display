@@ -499,7 +499,7 @@ void setup(void)
   spi0_init_16bit();
   ili9486_init_like_lib();
   uart_init();
-  uart_puts("Дисплей загружен.\r\n");
+  uart_puts("Display loaded.\r\n");
 
   SystemCoreClockUpdate();
   (void)SysTick_Config(SystemCoreClock / 1000u);
@@ -512,7 +512,17 @@ void loop(void)
   static uint8_t rx_buf[64];
   static uint32_t rx_len = 0u;
   static uint32_t last_rx_ms = 0u;
+  static uint32_t last_tx_ms = 0u;
   uint8_t b = 0u;
+  uint32_t now = millis();
+
+  if ((now - last_tx_ms) >= 1000u) {
+    char tbuf[12];
+    last_tx_ms = now;
+    u32_to_dec(tbuf, (uint32_t)sizeof(tbuf), now);
+    uart_puts(tbuf);
+    uart_puts("\r\n");
+  }
 
   while (uart_try_read(&b) != 0) {
     last_rx_ms = millis();
@@ -534,7 +544,7 @@ void loop(void)
 
   // Show partial frame if no newline came.
   if (rx_len != 0u) {
-    uint32_t now = millis();
+    now = millis();
     if ((now - last_rx_ms) >= 40u) {
       show_rx(now, rx_buf, rx_len);
       rx_len = 0u;
