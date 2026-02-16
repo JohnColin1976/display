@@ -24,9 +24,9 @@ int main(void) {
     NVIC_SetPriority(TC0_IRQn, 0);   // высокий приоритет
     NVIC_EnableIRQ(TC0_IRQn);
 
-    spi0_init();
+    setup();
 
     while (1) {
-        // Операции
+        loop();
     }
 }

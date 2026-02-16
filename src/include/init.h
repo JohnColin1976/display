@@ -26,5 +26,7 @@ void gpio_init_out(void);
 void sync_out_init(void);
 void dacc_init(void);
 void spi0_init(void);
+void setup(void);
+void loop(void);
 
 #endif /* INIT_H */
